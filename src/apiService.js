@@ -4,12 +4,12 @@ const rootURL = 'https://pixabay.com/api/?image_type=';
 const tCont = 'photo'; // type contetnt
 const orient = 'horizontal';
 // let query = 'cat';
-const pageN = 1; // page No
-const pPage = 12;
+// let pageN = 1; // page No
+const pPage = 12; // 200 max
 const KEY = '21031732-6fee4eefe658f550324b0a29e'; // my
 const constURL = rootURL + 'photo&orientation=horizontal&key=' + KEY + '&q=';
 
-function fetchPix(query) {
+function fetchPix(query,pageN) {
   //   console.log(`${rootURL}${tCont}&orientation=${orient}&q=${query}&page=${pageN}&per_page=${pPage}&key=${KEY}`);
   //   fetch(
   //     `${rootURL}${tCont}&orientation=${orient}&q=${query}&page=${pageN}&per_page=${pPage}&key=${KEY}`,

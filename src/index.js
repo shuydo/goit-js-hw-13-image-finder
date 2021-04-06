@@ -1,3 +1,4 @@
+console.clear();
 import './styles.css';
 const _ = require('lodash');
 import API from './apiService';
@@ -6,11 +7,25 @@ import cardTemplate from './card_templ.hbs';
 
 const inputRef = document.querySelector('.search-form');
 const galRef = document.querySelector('.gallery');
-console.log(galRef);
+const moreBtnRef = document.querySelector('.more');
+// console.log(moreBtnRef);
+let searchQuery = '';
+// let currentQuery='';
+let pageN=1;
 
 // inputRef.addEventListener('input', _.debounce(onInputChange, 500));
 
 inputRef.addEventListener('submit', onSearch);
+moreBtnRef.addEventListener('click', onClickMoreBtn);
+
+function onClickMoreBtn() {
+  // console.log('onClickMoreBtn');
+
+  API.fetchPix(searchQuery, pageN).then(res => {
+    pageN += 1;
+    return renderCard(res.hits);
+  });
+}
 
 // let inputCbInvocationCounter = 0;
 
@@ -32,13 +47,21 @@ function onInputChange(event) {
 
 function onSearch(evt) {
   evt.preventDefault();
-  const form = evt.currentTarget;
-  const searchQuery = form.elements.query.value;
-  console.log('?', searchQuery);
-  API.fetchPix(searchQuery).then(res => {
-    console.log(res.hits[0]);
-    return renderCard(res.hits);
-  });
+  const submitText = evt.currentTarget;
+  // console.log('submitText:_', submitText.elements.query.value, '_searchQuery:_', searchQuery,'_');
+  if (submitText.elements.query.value === searchQuery)return;
+    pageN = 1;
+    galRef.innerHTML = '';
+    searchQuery = submitText.elements.query.value;
+
+    // console.log('?', searchQuery);
+
+    API.fetchPix(searchQuery, pageN).then(res => {
+      // console.log(res.hits[0]);
+      pageN += 1;
+      return renderCard(res.hits);
+    });
+  
 
   //   .catch(onFetchError)
   //   .finally(() => form.reset());
@@ -46,8 +69,15 @@ function onSearch(evt) {
   //   galRef.innerHTML = menu.reduce((acc, Val) => acc + mTemplate(Val), '');
 }
 function renderCard(array) {
-  //   galRef.innerHTML = cardTemplate(obj);
+  // console.log('arr',array.reduce((acc, Val) => acc + cardTemplate(Val), ''));
+  // galRef.innerHTML = cardTemplate(obj);
 
-  galRef.innerHTML = array.reduce((acc, Val) => acc + cardTemplate(Val), '');
+  // galRef.innerHTML = array.reduce((acc, Val) => acc + cardTemplate(Val), '');
+  galRef.insertAdjacentHTML(
+    'beforeend',
+    array.reduce((acc, Val) => acc + cardTemplate(Val), ''),
+  );
+  // galRef.insertAdjacentHTML("beforeend", cardTemplate(array));
+
   // gridRef.innerHTML = menu.reduce((acc, Val) => acc + mTemplate(Val), '');
 }
