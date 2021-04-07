@@ -1,17 +1,14 @@
-console.clear();
+// console.clear();
 import './styles.css';
 const _ = require('lodash');
 import API from './apiService';
 import cardTemplate from './card_templ.hbs';
-// API.fetchPix('cat');
 
 const inputRef = document.querySelector('.search-form');
 const galRef = document.querySelector('.gallery');
 const moreBtnRef = document.querySelector('.more');
-// console.log(moreBtnRef);
 let searchQuery = '';
-// let currentQuery='';
-let pageN=1;
+let pageN = 1;
 
 // inputRef.addEventListener('input', _.debounce(onInputChange, 500));
 
@@ -23,7 +20,24 @@ function onClickMoreBtn() {
 
   API.fetchPix(searchQuery, pageN).then(res => {
     pageN += 1;
-    return renderCard(res.hits);
+    renderCard(res.hits);
+
+    // console.log('до скрола');
+      // window.scrollTo(0, 100);
+      // window.scrollTo({ top: 1500, behavior: 'smooth' });
+      // window.scrollTo({top: 2000,left: 100, behavior: 'smooth' });
+      setTimeout(function () {
+        window.scrollTo({top: 3000, behavior: 'smooth' });
+      // window.scrollByPages(1);
+
+    },2);
+      // auto smooth instant
+
+      // window.scrollByPages(1);
+      // window.scrollBy(0, window.innerHeight);
+    // console.log('после скрола');
+
+    return;
   });
 }
 
@@ -49,19 +63,18 @@ function onSearch(evt) {
   evt.preventDefault();
   const submitText = evt.currentTarget;
   // console.log('submitText:_', submitText.elements.query.value, '_searchQuery:_', searchQuery,'_');
-  if (submitText.elements.query.value === searchQuery)return;
-    pageN = 1;
-    galRef.innerHTML = '';
-    searchQuery = submitText.elements.query.value;
+  if (submitText.elements.query.value === searchQuery) return;
+  pageN = 1;
+  galRef.innerHTML = '';
+  searchQuery = submitText.elements.query.value;
 
-    // console.log('?', searchQuery);
+  // console.log('?', searchQuery);
 
-    API.fetchPix(searchQuery, pageN).then(res => {
-      // console.log(res.hits[0]);
-      pageN += 1;
-      return renderCard(res.hits);
-    });
-  
+  API.fetchPix(searchQuery, pageN).then(res => {
+    // console.log(res.hits[0]);
+    pageN += 1;
+    return renderCard(res.hits);
+  });
 
   //   .catch(onFetchError)
   //   .finally(() => form.reset());
